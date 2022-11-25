@@ -22,13 +22,18 @@ namespace Katas.UniMod.HostExample
         {
             // if the context were already initialized this would throw an error. You can use UniModRuntime.IsContextInitialized for checking
             UniModRuntime.InitializeContext(HostId, HostVersion);
+            
 
             // refresh the context it so it scans all installed mods
+            UniModRuntime.Context.AddSource(embeddedModSource);
             await UniModRuntime.Context.RefreshAsync();
             
             // try to load the example mod
             bool successful = await UniModRuntime.Context.TryLoadModAsync(ModExampleId);
             
+            // IMPORTANT: you should never use the IMod.LoadAsync() method directly unless you know what you are doing.
+            // Always use the TryLoadModAsync() method from the context as we just did.
+
             if (successful)
                 Debug.Log("Mod example loaded successfully!");
             else
